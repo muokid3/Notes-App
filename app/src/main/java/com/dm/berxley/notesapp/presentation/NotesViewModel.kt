@@ -1,6 +1,7 @@
 package com.dm.berxley.notesapp.presentation
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,12 +17,17 @@ class NotesViewModel(
     private val noteRepository: NoteRepository = Graph.noteRepository
 ) : ViewModel() {
 
-    var noteTitle by mutableStateOf("")
-    var noteDescription by mutableStateOf("")
-    var createdAt by mutableStateOf(System.currentTimeMillis())
+    private val _noteTitle = mutableStateOf("")
+    val noteTitle: State<String> = _noteTitle
 
-    lateinit var getNotesOrderedByDateAdded: Flow<List<Note>>;
-    lateinit var getNotesOrderedByTitle: Flow<List<Note>>;
+    private val _noteDescription = mutableStateOf("")
+    val noteDescription: State<String> = _noteDescription
+
+    private val _createdAt = mutableStateOf(System.currentTimeMillis())
+    val createdAt: State<Long> = _createdAt
+
+    lateinit var getNotesOrderedByDateAdded: Flow<List<Note>>
+    lateinit var getNotesOrderedByTitle: Flow<List<Note>>
 
     init {
         viewModelScope.launch {
@@ -34,10 +40,13 @@ class NotesViewModel(
     }
 
     fun onNewNoteTitle(newTitle: String){
-        noteTitle = newTitle
+        _noteTitle.value = newTitle
     }
     fun onNewNoteDescription(newDesc: String){
-        noteDescription = newDesc
+        _noteDescription.value = newDesc
+    }
+    fun onNewCreatedAt(newCreatedAt: Long){
+        _createdAt.value = newCreatedAt
     }
 
     fun upsertNote(note: Note){

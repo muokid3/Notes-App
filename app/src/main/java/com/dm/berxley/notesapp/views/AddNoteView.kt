@@ -57,19 +57,15 @@ fun AddNoteView(
                 createdAt = System.currentTimeMillis()
             )
         )
-        viewModel.noteTitle = editingNote.value.title
-        viewModel.noteDescription = editingNote.value.description
-        viewModel.createdAt = editingNote.value.createdAt
-    }else{
-        viewModel.noteTitle = ""
-        viewModel.noteDescription = ""
-        viewModel.createdAt = System.currentTimeMillis()
+        viewModel.onNewNoteTitle(editingNote.value.title)
+        viewModel.onNewNoteDescription(editingNote.value.description)
+        viewModel.onNewCreatedAt(editingNote.value.createdAt)
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = if (id!=0)"Edit A  Note" else "Add a Note") },
+                title = { Text(text = if (id != 0) "Edit A  Note" else "Add a Note") },
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -86,21 +82,21 @@ fun AddNoteView(
             )
         },
 
-        ) {
+        ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(
                     start = 8.dp,
                     end = 8.dp,
-                    top = it.calculateTopPadding(),
-                    bottom = it.calculateBottomPadding()
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
                 )
                 .fillMaxSize()
         ) {
 
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = viewModel.noteTitle,
+                value = viewModel.noteTitle.value,
                 onValueChange = { viewModel.onNewNoteTitle(it) },
                 label = { Text(text = "Title") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -108,29 +104,30 @@ fun AddNoteView(
 
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = viewModel.noteDescription,
+                value = viewModel.noteDescription.value,
                 onValueChange = { viewModel.onNewNoteDescription(it) },
                 label = { Text(text = "Notes") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             )
 
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    if (viewModel.noteTitle.isNotEmpty() && viewModel.noteDescription.isNotEmpty()) {
+                    if (viewModel.noteTitle.value.isNotEmpty() && viewModel.noteDescription.value.isNotEmpty()) {
 
                         val noteToAdd: Note = if (id != 0) {
                             Note(
                                 id = id,
-                                title = viewModel.noteTitle.trim(),
-                                description = viewModel.noteDescription.trim(),
-                                createdAt = viewModel.createdAt
+                                title = viewModel.noteTitle.value.trim(),
+                                description = viewModel.noteDescription.value.trim(),
+                                createdAt = viewModel.createdAt.value
                             )
                         } else {
                             Note(
-                                title = viewModel.noteTitle,
-                                description = viewModel.noteDescription,
+                                title = viewModel.noteTitle.value,
+                                description = viewModel.noteDescription.value,
                                 createdAt = System.currentTimeMillis()
                             )
                         }
