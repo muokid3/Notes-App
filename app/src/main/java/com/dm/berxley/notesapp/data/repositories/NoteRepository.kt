@@ -2,6 +2,7 @@ package com.dm.berxley.notesapp.data.repositories
 
 import com.dm.berxley.notesapp.data.daos.NoteDao
 import com.dm.berxley.notesapp.data.models.Note
+import kotlinx.coroutines.flow.Flow
 
 class NoteRepository(private val notesDao: NoteDao) {
 
@@ -13,16 +14,12 @@ class NoteRepository(private val notesDao: NoteDao) {
         notesDao.deleteNote(note)
     }
 
-    fun getNoteById(id: Int){
-        notesDao.getNoteById(id)
+    fun getNoteById(id: Int): Flow<Note>{
+        return notesDao.getNoteById(id)
     }
 
-    suspend fun getNotesOrderedByDateAdded(){
-        notesDao.getNotesOrderedByDateAdded()
-    }
-    suspend fun getNotesOrderedByTitle(){
-        notesDao.getNotesOrderedByTitle()
-    }
+    fun getNotesOrderedByDateAdded() = notesDao.getNotesOrderedByDateAdded()
+    fun getNotesOrderedByTitle() = notesDao.getNotesOrderedByTitle()
 
 
 
